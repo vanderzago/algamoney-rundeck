@@ -1,0 +1,40 @@
+- defaultTab: summary
+  description: Incluir input da API no Graylog
+  executionEnabled: true
+  loglevel: INFO
+  name: input-API-Graylog
+  nodeFilterEditable: false
+  nodefilters:
+    dispatch:
+      excludePrecedence: true
+      keepgoing: false
+      rankOrder: ascending
+      successOnEmptyNodeFilter: false
+      threadcount: '1'
+  nodesSelectedByDefault: true
+  options:
+  - description: username do Usuario Graylog
+    name: username
+    required: true
+  - description: Senha do Usuario Graylog
+    name: password
+    required: true
+    secure: true
+    valueExposed: true
+  scheduleEnabled: true
+  sequence:
+    commands:
+    - script: |
+        echo '
+        {
+          "change_user": {
+            "user": "@option.username@",
+            "password": "@option.password@"
+            },
+             "run_list": [ "recipe[inm_openldap::change_password]" ]
+        }
+        ' > /tmp/change_user.json
+    - description: Invoca a API do Graylog para criar o inpyt
+      exec: sudo chef-client -j /tmp/change_user.json -l info ; rm -f /tmp/change_user.json
+    keepgoing: false
+    strategy: node-first
