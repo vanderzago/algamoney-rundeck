@@ -1,0 +1,19 @@
+- defaultTab: nodes
+  description: Invoca a API do Grafana para criar o dashboard
+  executionEnabled: true
+  loglevel: INFO
+  name: Grafana-create-dashboard
+  nodeFilterEditable: false
+  options:
+  - name: URL
+    value: http://grafana:3000
+  - name: BASIC_AUTH
+    value: YWRtaW46YWRtaW4=
+  plugins:
+    ExecutionLifecycle: null
+  scheduleEnabled: true
+  sequence:
+    commands:
+    - exec: /tmp/grafana-create-dashboard.sh ${option.URL} ${option.BASIC_AUTH}
+    keepgoing: false
+    strategy: node-first

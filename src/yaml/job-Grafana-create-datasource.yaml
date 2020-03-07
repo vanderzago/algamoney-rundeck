@@ -1,0 +1,21 @@
+- defaultTab: nodes
+  description: Invoca a API do Grafana para criar o datasource
+  executionEnabled: true
+  loglevel: INFO
+  name: Grafana-create-datasource
+  nodeFilterEditable: false
+  options:
+  - name: URL
+    value: http://grafana:3000
+  - name: BASIC_AUTH
+    value: YWRtaW46YWRtaW4=
+  - name: ELASTICSEARCH_URL
+    value: http://elasticsearch:9200
+  plugins:
+    ExecutionLifecycle: null
+  scheduleEnabled: true
+  sequence:
+    commands:
+    - exec: /tmp/grafana-create-datasource.sh ${option.URL} ${option.BASIC_AUTH} ${option.ELASTICSEARCH_URL}
+    keepgoing: false
+    strategy: node-first

@@ -1,8 +1,18 @@
 #!/bin/bash
-curl --location --request POST "http://graylog:9000/api/system/inputs" \
+APP=Graylog
+URL=$1
+BASIC_AUTH=$2
+
+curl --fail $URL; Res=$?
+
+if [[ $Res -eq 0 ]]
+then
+    echo $APP is up
+    echo Creating Input
+    curl --location --request POST "${URL}/api/system/inputs" \
     --header 'Accept: application/json' \
     --header 'Content-Type: application/json' \
-    --header "Authorization: Basic YWRtaW46YWRtaW4=" \
+    --header "Authorization: Basic ${BASIC_AUTH}" \
     --header 'X-Requested-By: cli' \
     --data-raw '{
             "title": "Algamoney-API",
@@ -27,3 +37,7 @@ curl --location --request POST "http://graylog:9000/api/system/inputs" \
                 },
             "node": null
         }'
+else
+    echo $APP is not running
+    exit 1
+fi
